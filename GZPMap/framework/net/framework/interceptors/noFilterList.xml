@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<!-- 需要权限过滤才能访问地址 -->
+	<!-- 系统管理 -->
+	
+	<filter-value>/menu.do?adminUI</filter-value>
+	<filter-value>/admin/module/listView</filter-value>
+	<filter-value>/pages/admin/module/list.jsp</filter-value>
+	<filter-value>/admin/module/addView</filter-value>
+	<filter-value>/pages/admin/module/addView.jsp</filter-value>
+	<filter-value>/admin/module/updateView</filter-value>
+	<filter-value>/pages/admin/module/updateView.jsp</filter-value>
+
+	<filter-value>/admin/role/listView</filter-value>
+	<filter-value>/pages/admin/role/list.jsp</filter-value>
+	<filter-value>/admin/role/addView</filter-value>
+	<filter-value>/pages/admin/role/addView.jsp</filter-value>
+	<filter-value>/admin/role/updateView</filter-value>
+	<filter-value>/pages/admin/role/updateView.jsp</filter-value>
+	
+    <filter-value>/admin/user/listView</filter-value>
+	<filter-value>/pages/admin/user/list.jsp</filter-value>
+	<filter-value>/admin/user/addView</filter-value>	
+	<filter-value>/pages/admin/user/addView.jsp</filter-value>
+	<filter-value>/admin/user/updateView</filter-value>
+	<filter-value>/pages/admin/user/updateView.jsp</filter-value>
+	<filter-value>/admin/user/roleView</filter-value>
+	<filter-value>/pages/admin/user/roleView.jsp</filter-value>
+</config>

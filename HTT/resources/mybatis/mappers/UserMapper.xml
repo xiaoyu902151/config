@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tarena.ht.mapper.UserMapper">
+	
+	<select id="findAll" resultMap="userRM">
+		select * from 
+		(select * from
+		user_p u
+		       left join
+		(select u.user_info_id,u.name,u.card_no,u.manager_id,m.m_name,u.join_date,
+		u.salary,u.birthday,u.gender,u.station,u.telephone,u.user_level,u.order_no,
+		u.remark from 
+		user_info_p u
+		            left join
+		(select user_info_id m_id,name m_name from user_info_p) m
+		            on u.manager_id = m.m_id)info
+		       on u.user_id = info.user_info_id)u 
+		       left join
+		 (select dept_id d_id,dept_name from dept_p)d 
+		       on u.dept_id = d.d_id
+		order by order_no
+	</select>
+	
+	
+	
+	<!--关联封装数据
+		user对象中 info对象   dept对象
+	  -->
+	<resultMap type="User" id="userRM" autoMapping="true">
+		<id property="userId" column="user_id"/>
+		
+		<!--封装userinfo对象  -->
+		<association property="userInfo" javaType="UserInfo" resultMap="userInfoRM"/>
+		
+		<!--封装dept部门对象  -->
+		<association property="dept" javaType="Dept">
+			<id column="dept_id" property="deptId"/>
+			<result column="dept_name" property="deptName"/>
+		</association>
+	</resultMap>
+	
+	
+	<!--封装UserInfo对象  -->
+	<resultMap type="UserInfo" id="userInfoRM" autoMapping="true">
+		<id property="userInfoId" column="user_info_id"/>
+		<!--一对一关联上级领导  -->
+		<association property="manager" javaType="UserInfo">
+			<!--上级领导的封装    -->
+			<id property="userInfoId" column="manager_id"/>
+			<result property="name" column="m_name"/>
+		</association>
+	</resultMap>
+	
+	
+	
+	<!--删除用户信息  -->
+	<delete id="deleteUsers">
+		delete from user_p where user_id in
+			<foreach collection="array" open="(" close=")" separator="," item="id">
+				#{id}
+			</foreach>
+	</delete>
+	
+	
+	<update id="updateState">
+		update user_p set state = #{state} where user_id in (
+			<foreach collection="userIds" item="id" separator=",">
+				#{id}
+			</foreach>
+		)
+	</update>
+	
+	<!--用户新增操作  -->
+	<insert id="saveUser">
+		insert into user_p values(
+			<!--建议添加jdbcType  -->
+			#{userId},
+			#{dept.deptId},
+			#{username},
+			#{password},
+			#{state},
+			#{createBy,jdbcType=VARCHAR},
+			#{createDept,jdbcType=VARCHAR},
+			#{createTime,jdbcType=DATE},
+			#{updateBy,jdbcType=VARCHAR},
+			#{updateTime,jdbcType=DATE}
+		)
+	</insert>
+	
+	
+	
+	<!--mybatis中很多时候有些sql是重复的,这些sql只需要写一遍,之后随处调用  -->
+	<sql id="userSql">
+		select * from 
+		(select * from
+		user_p u
+		       left join
+		(select u.user_info_id,u.name,u.card_no,u.manager_id,m.m_name,u.join_date,
+		u.salary,u.birthday,u.gender,u.station,u.telephone,u.user_level,u.order_no,
+		u.remark from 
+		user_info_p u
+		            left join
+		(select user_info_id m_id,name m_name from user_info_p) m
+		            on u.manager_id = m.m_id)info
+		       on u.user_id = info.user_info_id)u 
+		       left join
+		 (select dept_id d_id,dept_name from dept_p)d 
+		       on u.dept_id = d.d_id
+	</sql>
+	
+	<!--根据userId查询用户信息  -->
+	<select id="findUserById" resultMap="userRM">
+		<!--sql复用  -->
+		<include refid="userSql"/>
+		where user_id = #{userId}
+	</select>
+	
+	<!--修改user表数据  -->
+	<update id="updateUser">
+		update user_p 
+		<set>
+			dept_id = #{dept.deptId},
+			username = #{username},
+			password = #{password},
+			state = #{state},
+			<if test="createBy !=null">create_by = #{createBy,jdbcType=VARCHAR},</if>  
+			create_dept = #{createDept,jdbcType=VARCHAR},
+			create_time = #{createTime,jdbcType=DATE},
+			update_by = #{updateBy,jdbcType=VARCHAR},
+			update_time = #{updateTime,jdbcType=DATE}
+		</set>
+		where user_id = #{userId}
+
+	</update>
+	
+	<!--根据用户名和密码查询数据  -->
+	<select id="findUserByUP" resultMap="userRM">
+		<include refid="userSql"/>
+		where username = #{userName} and password = #{password}
+	
+	</select>
+	
+	
+	<!--根据用户名查询用户信息  -->
+	<select id="findUserByUserName" resultMap="userRM">
+		<include refid="userSql"/>
+		where username = #{username}
+	</select>
+	
+	<!--根据userId查询模块名称  -->
+	<select id="findPListByUserId" resultType="string">
+	  select name
+	  from module_p
+	  where module_id in
+	       (select module_id
+	          from role_module_p
+	         where role_id in
+               (select role_id from role_user_p where user_id = #{userId}))
+	
+	</select>
+
+
+
+
+</mapper>

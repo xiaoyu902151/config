@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<!-- 不需要权限过滤但是需要登录才能访问的地址 -->
+	<filter-value>/home.do</filter-value>
+	<filter-value>/menu.do</filter-value>
+	<filter-value>/pages/admin/admin_layout.jsp</filter-value>
+	<filter-value>/pages/admin/admin_center.jsp</filter-value>
+	<filter-value>/pages/admin/admin_north.jsp</filter-value>
+	<!-- 
+	<filter-value>/admin/user.do</filter-value>
+	<filter-value>/admin/role.do</filter-value>
+	<filter-value>/admin/module.do</filter-value>
+	<filter-value>/admin/menu.do</filter-value>
+	<filter-value>/admin/video.do</filter-value>
+	<filter-value>/danger/port.do</filter-value>
+	<filter-value>/danger/mt.do</filter-value>
+	<filter-value>/danger/zgq.do</filter-value>
+	<filter-value>/danger/zg.do</filter-value>
+	<filter-value>/danger/kfdc.do</filter-value>
+	<filter-value>/danger/type.do</filter-value> -->
+</config>

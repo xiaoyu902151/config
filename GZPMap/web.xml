@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
+  <display-name>helloworld</display-name>
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.htm</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+ 
+  <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>classpath:spring.xml,classpath:spring-hibernate.xml</param-value>
+  </context-param>
+  <description>登录权限过滤器</description>
+  <filter>
+    <filter-name>loginFilter</filter-name>
+    <filter-class>net.framework.interceptors.LoginFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>loginFilter</filter-name>
+    <url-pattern>*.do</url-pattern>
+  </filter-mapping>
+  <filter-mapping>  
+    <filter-name>loginFilter</filter-name>  
+    <url-pattern>/pages/*</url-pattern>  
+</filter-mapping>  
+  <filter>
+    <filter-name>openSessionInViewFilter</filter-name>
+    <filter-class>org.springframework.orm.hibernate4.support.OpenSessionInViewFilter</filter-class>
+    <init-param>
+      <param-name>singleSession</param-name>
+      <param-value>true</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>openSessionInViewFilter</filter-name>
+    <url-pattern>*.do</url-pattern>
+  </filter-mapping>
+   <!-- 配置监听器用于初始化SPRING --> 
+  <listener> 
+     <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class> 
+  </listener>
+  <listener>
+    <description>spring上下文</description>
+    <listener-class>net.framework.interceptors.OnlineListner</listener-class>
+  </listener>
+  <!-- <listener>
+		<listener-class>com.bxsurvey.process.taskListener.GlobalListener</listener-class>
+</listener>  -->
+    <servlet>
+    <description>spring mvc servlet</description>
+    <servlet-name>springMvc</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <init-param>
+      <description>spring mvc 配置文件</description>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>classpath:spring-mvc.xml</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>springMvc</servlet-name>
+    <url-pattern>*.do</url-pattern>
+  </servlet-mapping>
+  
+  <session-config>
+    <session-timeout>30</session-timeout>
+  </session-config>
+  
+  <servlet>
+    <description></description>
+    <display-name>MapPrintStream</display-name>
+    <servlet-name>MapPrintStream</servlet-name>
+    <servlet-class>com.bxsurvey.mapprint.MapPrintStream</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>MapPrintStream</servlet-name>
+    <url-pattern>/MapPrintStream</url-pattern>
+  </servlet-mapping>
+</web-app>
